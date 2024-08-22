@@ -1,19 +1,24 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+import dva, { DvaOption } from "dva";
+import route from './router'
+import global from './model/global'
+import { IGlobalState} from './type'
+import './index.css'
+const initialGlobalState = ()=>{
+	const globalLocal = JSON.parse(localStorage.getItem("global") || '{}')
+	return {
+		...global.state,
+		...globalLocal
+	}
+}
+const app = dva({
+	onStateChange(state:{global:IGlobalState}){
+		localStorage.setItem("global",JSON.stringify(state.global))
+	},
+	initialState:{
+		global:initialGlobalState()
+	}
+} as unknown as DvaOption);
+app.router(route)
+app.model(global)
+//挂载并启动我们的项目
+app.start("#root")
