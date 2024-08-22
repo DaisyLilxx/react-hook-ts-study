@@ -1,8 +1,8 @@
 {
   "build": {
     "env": {
-      "NODE_VERSION": "18.x",
-       "command": "npm install --force && npm run build"
-    }
+      "NODE_VERSION": "18.x"
+    },
+    "command": "npm install --force && npm run build"
   }
 }
